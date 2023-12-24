@@ -7,7 +7,7 @@ export const useCommentPost = (props) => {
   return useMutation(postComment, {
     onSuccess: ({ post }) => {
       toast("New comment added.");
-      queryClient.invalidateQueries(["single-post", post.data.id]);
+      queryClient.invalidateQueries(["single-post", post.id]);
     },
     ...props,
   });
