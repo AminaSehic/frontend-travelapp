@@ -1,10 +1,12 @@
 import { api } from "../api/api.instance";
+import { getSearchQuery } from "../utils/postSearchQuery";
 
 export const loginUser = async (data) => {
   return await api.post("/users/authenticate", data);
 };
 
 export const logoutUser = async () => {
+  delete api.defaults.headers.common["Authorization"];
   return await api.post("/users/logout");
 };
 
@@ -25,7 +27,12 @@ export const currentUser = async () => {
   return await api.get("/users/current");
 };
 
-export const getUserPosts = async () => {
-  const { data } = await api.get("/users/posts");
+export const getUserPosts = async (searchData) => {
+  const query = getSearchQuery(searchData);
+  const { data } = await api.get("/users/posts" + query);
   return data;
+};
+
+export const deleteUser = async (id) => {
+  await api.delete(`/users/${id}`);
 };

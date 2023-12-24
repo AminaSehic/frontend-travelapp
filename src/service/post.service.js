@@ -1,12 +1,20 @@
 import { api } from "../api/api.instance";
+import { getSearchQuery } from "../utils/postSearchQuery";
 
-export const getAllPosts = async () => {
-  const { data } = await api.get(`/posts`);
+export const getAllPosts = async (searchData) => {
+  const query = getSearchQuery(searchData);
+  const { data } = await api.get(`/posts${query}`);
   return data;
 };
 
-export const getPopularPost = async () => {
-  const { data } = await api.get(`/posts/popular`);
+export const getPost = async (id) => {
+  const { data } = await api.get(`/posts/${id}`);
+  return data;
+};
+
+export const getPopularPost = async (searchData) => {
+  const query = getSearchQuery(searchData);
+  const { data } = await api.get(`/posts/popular${query}`);
   return data;
 };
 
@@ -15,13 +23,19 @@ export const createPost = async (postData) => {
   return data;
 };
 
+export const updatePost = async ({ id, ...postData }) => {
+  const { data } = await api.put(`/posts/${id}`, postData);
+  return data;
+};
+
 export const likePost = async (id) => {
   const { data } = await api.post(`/posts/${id}/like`);
   return data;
 };
 
-export const getPendingPosts = async () => {
-  const { data } = await api.get("/posts/pending");
+export const getPendingPosts = async (searchData) => {
+  const query = getSearchQuery(searchData);
+  const { data } = await api.get("/posts/pending" + query);
   return data;
 };
 

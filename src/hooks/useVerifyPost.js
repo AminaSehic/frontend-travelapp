@@ -8,10 +8,10 @@ export const useVerifyPost = (props) => {
   return useMutation(verifyPost, {
     onSuccess: ({ data }) => {
       toast("Post successfully verified.");
-      console.log("Verified post");
-      queryClient.refetchQueries(["pending-posts"]);
-      queryClient.refetchQueries(["all-posts"]);
-      queryClient.refetchQueries(["user-posts"]);
+      queryClient.invalidateQueries(["pending-posts"]);
+      queryClient.invalidateQueries(["popular-posts"]);
+      queryClient.invalidateQueries(["all-posts"]);
+      queryClient.invalidateQueries(["user-posts"]);
     },
     ...props,
   });

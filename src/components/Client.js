@@ -1,7 +1,23 @@
 import styled from "styled-components";
 import Image from "../images/user.png";
+import Button, { ButtonSpinner } from "./Button";
+import { useRemoveUser } from "../hooks/useRemoveUser";
+import { useAuthContext } from "../hooks/useAuthContext";
+import { useState } from "react";
+import EditProfile from "../pages/EditProfile";
 
 const Client = (props) => {
+  const user = useAuthContext().user;
+  const { mutateAsync, isLoading } = useRemoveUser();
+
+  const [modalIsOpen, setIsOpen] = useState(false);
+
+  const onRemoveUser = async () => {
+    await mutateAsync(props.id);
+  };
+
+  const onEditUser = () => setIsOpen(true);
+
   return (
     <Wrapper>
       <Title>
@@ -15,9 +31,32 @@ const Client = (props) => {
       <div>
         Email: <strong>{props.email}</strong>
       </div>
+      {user?.role === "Admin" && (
+        <ButtonWrapper>
+          <Button onClick={onRemoveUser}>
+            {isLoading ? <ButtonSpinner /> : "Delete"}
+          </Button>
+          <Button onClick={onEditUser}>Edit</Button>
+        </ButtonWrapper>
+      )}
+      <EditProfile
+        modalIsOpen={modalIsOpen}
+        setIsOpen={setIsOpen}
+        firstName={props?.name}
+        lastName={props?.surname}
+        email={props?.email}
+        id={props?.id}
+        currentUser
+      />
     </Wrapper>
   );
 };
+
+const ButtonWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+`;
 
 const Wrapper = styled.div`
   width: 220px;
